@@ -112,10 +112,17 @@ else:
         st.write(f"Con aportaciones de **{dinero(resultado.aporte_mensual)} al mes**, "
                  f"podrías retirar **{dinero(resultado.ingreso_mensual)} al mes** desde esa edad.")
 
-    m1, m2, m3 = st.columns(3)
+    m1, m2, m3, m4 = st.columns(4)
     m1.metric("Capital al retirarte, pesos de hoy", dinero(resultado.capital_al_retiro))
-    m2.metric("Años de aportaciones", resultado.edad_retiro - edad_actual)
-    m3.metric("Años financiados", edad_final - resultado.edad_retiro)
+    m2.metric(
+        "Saldo nominal al retirarte",
+        dinero(
+            resultado.capital_al_retiro
+            * (1 + inflacion_pct / 100) ** (resultado.edad_retiro - edad_actual)
+        ),
+    )
+    m3.metric("Años de aportaciones", resultado.edad_retiro - edad_actual)
+    m4.metric("Años financiados", edad_final - resultado.edad_retiro)
 
     st.subheader("Cómo evolucionaría tu saldo")
     tabla = pd.DataFrame(resultado.proyeccion)
